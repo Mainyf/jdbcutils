@@ -9,9 +9,7 @@ import io.github.mainyf.jdbcutils.utils.ReflectUtils;
 import io.github.mainyf.jdbcutils.utils.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MySQLTransformEntity implements IEntityTransform {
@@ -29,15 +27,6 @@ public class MySQLTransformEntity implements IEntityTransform {
                     Column column = v.getAnnotation(Column.class);
                     Length length = v.getAnnotation(Length.class);
                     Precision precision = v.getAnnotation(Precision.class);
-                    v.setAccessible(true);
-                    Object defaultValue = null;
-                    try {
-                        defaultValue = v.get(obj);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } finally {
-                        v.setAccessible(false);
-                    }
                     return new FieldEntity(
                         StringUtils.isBlank(column.name()) ? v.getName() : column.name(),
                         column.type(),
@@ -46,7 +35,7 @@ public class MySQLTransformEntity implements IEntityTransform {
                         new FieldAttribute(
                             length == null ? null : length.value(),
                             precision == null ? null : precision.value(),
-                            defaultValue,
+                            null,
                             column.autoIncrement()
                         )
                     );

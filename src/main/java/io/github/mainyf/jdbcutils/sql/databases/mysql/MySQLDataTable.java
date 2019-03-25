@@ -39,9 +39,13 @@ public class MySQLDataTable<T> implements IDataTable {
     private String createSQL() {
         StringBuilder sqlBuilder = new StringBuilder("(");
         for (FieldEntity fieldEntity : this.entity.getFieldEntities()) {
-//            fieldEntity
+            sqlBuilder.append(this.fieldSQL(fieldEntity)).append(",");
         }
-        // TODO generate create table sql
+        sqlBuilder
+            .replace(sqlBuilder.length() - 1, sqlBuilder.length(), "")
+            .append("ENGINE=").append(entity.getEngineType().name())
+            .append("DEFAULT CHARSET=").append(entity.getCharset().toString());
+
         return sqlBuilder.toString();
     }
 
@@ -64,11 +68,13 @@ public class MySQLDataTable<T> implements IDataTable {
             }
         }
         if (fieldEntity.isHasPrimaryKey()) {
-            sqlBuilder.append("PRIMARY KEY");
+            sqlBuilder.append("PRIMARY KEY ");
+        }
+        if(fieldEntity.getAttribute().isAutoIncrement()) {
+            sqlBuilder.append("AUTO INCREMENT ");
         }
         sqlBuilder.append(fieldEntity.isNotNull() ? "NOT NULL" : "NULL");
 
-        // TODO default value sql generate
         return sqlBuilder.toString();
     }
 
