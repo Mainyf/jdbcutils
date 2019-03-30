@@ -3,7 +3,7 @@ package io.github.mainyf.jdbcutils.utils;
 import java.util.Collection;
 import java.util.function.Predicate;
 
-public class CollectionUtils {
+public class $ {
 
     public static <T> T find(Collection<T> collection, Predicate<T> predicate) {
         for(T t : collection) {
@@ -14,7 +14,7 @@ public class CollectionUtils {
         return null;
     }
 
-    public static <T> boolean containsWith(Collection<T> collection, Predicate<T> predicate) {
+    public static <T> boolean some(Collection<T> collection, Predicate<T> predicate) {
         return find(collection, predicate) != null;
     }
 

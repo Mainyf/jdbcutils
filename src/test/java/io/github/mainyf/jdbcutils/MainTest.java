@@ -8,7 +8,6 @@ public class MainTest {
 
     @Test
     public void test() {
-
         MySQLDatabase database = new MySQLDatabase(JDBCInfo
                 .builder()
                 .host("localhost")

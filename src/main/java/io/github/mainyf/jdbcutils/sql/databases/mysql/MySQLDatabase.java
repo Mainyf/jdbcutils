@@ -7,7 +7,7 @@ import io.github.mainyf.jdbcutils.sql.databases.IDataTable;
 import io.github.mainyf.jdbcutils.sql.databases.IDatabase;
 import io.github.mainyf.jdbcutils.transform.IEntityTransform;
 import io.github.mainyf.jdbcutils.transform.impl.MySQLTransformEntity;
-import io.github.mainyf.jdbcutils.utils.CollectionUtils;
+import io.github.mainyf.jdbcutils.utils.$;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -50,25 +50,25 @@ public class MySQLDatabase implements IDatabase {
     }
 
     private void checkSameName(String tableName) {
-        if(CollectionUtils.containsWith(this.entityMap.keySet(), (v) -> v.name.equals(tableName))) {
+        if($.some(this.entityMap.keySet(), (v) -> v.name.equals(tableName))) {
             throw new RuntimeException("table name already exists");
         }
     }
 
     private void checkSameEntity(Class clazz) {
-        if(CollectionUtils.containsWith(this.entityMap.keySet(), (v) -> v.clazz.equals(clazz))) {
+        if($.some(this.entityMap.keySet(), (v) -> v.clazz.equals(clazz))) {
             throw new RuntimeException("entity already exists");
         }
     }
 
     @Override
     public IDataTable getTable(String name) {
-        return this.entityMap.get(CollectionUtils.find(this.entityMap.keySet(), (v) -> v.name.equals(name)));
+        return this.entityMap.get($.find(this.entityMap.keySet(), (v) -> v.name.equals(name)));
     }
 
     @Override
     public IDataTable getTable(Class clazz) {
-        return this.entityMap.get(CollectionUtils.find(this.entityMap.keySet(), (v) -> v.clazz.equals(clazz)));
+        return this.entityMap.get($.find(this.entityMap.keySet(), (v) -> v.clazz.equals(clazz)));
     }
 
     @Override

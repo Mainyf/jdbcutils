@@ -1,7 +1,7 @@
 package io.github.mainyf.jdbcutils.entitys;
 
-import io.github.mainyf.jdbcutils.enums.DatabaseCharsets;
-import io.github.mainyf.jdbcutils.enums.TableDataEngine;
+import io.github.mainyf.jdbcutils.sql.builder.commonentrys.CharsetsEntry;
+import io.github.mainyf.jdbcutils.sql.builder.commonentrys.DataEngineEntry;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -20,8 +20,8 @@ public class TableEntity {
 
     private List<FieldEntity> fieldEntities;
 
-    private DatabaseCharsets charset = DatabaseCharsets.UTF8;
+    private CharsetsEntry charset = CharsetsEntry.UTF8;
 
-    private TableDataEngine engineType = TableDataEngine.MyISAM;
+    private DataEngineEntry engineType = DataEngineEntry.MyISAM;
 
 }
