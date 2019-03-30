@@ -20,7 +20,7 @@ public class MySQLDatabase implements IDatabase {
     private ConnectionPool pool;
     private Map<Key, IDataTable> entityMap = new HashMap<>();
     private IEntityTransform tableTransform = new MySQLTransformEntity();
-    private boolean hasInit = false;
+    private boolean hasInited = false;
 
     public MySQLDatabase(JDBCInfo jdbcInfo) {
         this.jdbcInfo = jdbcInfo;
@@ -30,12 +30,12 @@ public class MySQLDatabase implements IDatabase {
     public void initDatabase() throws ClassNotFoundException {
         this.pool = new ConnectionPool(this.jdbcInfo);
         this.pool.initPool();
-        this.hasInit = true;
+        this.hasInited = true;
     }
 
     @Override
     public <T> void registerEntity(Class<T> entityClass) {
-        checkHasInit();
+        checkHasInited();
         if(entityMap.containsKey(entityClass)) {
             throw new RuntimeException("entity already register");
         }
@@ -81,15 +81,15 @@ public class MySQLDatabase implements IDatabase {
         return this.jdbcInfo;
     }
 
-    private void checkHasInit() {
-        if(!this.hasInit) {
+    private void checkHasInited() {
+        if(!this.hasInited) {
             throw new RuntimeException("Uninitialized");
         }
     }
 
     @Data
     @AllArgsConstructor
-    class Key {
+    private class Key {
 
         private String name;
         private Class clazz;

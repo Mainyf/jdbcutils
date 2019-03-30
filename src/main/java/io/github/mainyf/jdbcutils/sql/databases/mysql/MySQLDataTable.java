@@ -8,6 +8,7 @@ import io.github.mainyf.jdbcutils.sql.databases.IDataTable;
 import io.github.mainyf.jdbcutils.sql.databases.IDatabase;
 import io.github.mainyf.jdbcutils.sql.where.Where;
 
+import java.util.List;
 import java.util.Set;
 
 public class MySQLDataTable<T> implements IDataTable {
@@ -29,21 +30,30 @@ public class MySQLDataTable<T> implements IDataTable {
         StringBuilder sqlBuilder = new StringBuilder("CREATE TABLE IF NOT EXISTS `");
         sqlBuilder
             .append(database.getJDBCInfo().getDatabase())
-            .append("`.`")
-            .append(this.entity.getName())
-            .append("` (");
+            .append("`.`").append(this.entity.getName()).append("`")
+            .append(this.createSQL());
+
+        System.out.println(sqlBuilder.toString());
 
         sqlExecuter.executeUpdateSQL(sqlBuilder.toString());
     }
 
-    private String createSQL() {
+    public String createSQL() {
         StringBuilder sqlBuilder = new StringBuilder("(");
-        for (FieldEntity fieldEntity : this.entity.getFieldEntities()) {
-            sqlBuilder.append(this.fieldSQL(fieldEntity)).append(",");
+        List<FieldEntity> fields = this.entity.getFieldEntities();
+        int length = fields.size();
+        for (int i = 0; i < length; i++) {
+            if (i != 0 && i != length - 1) {
+                sqlBuilder.append(" ");
+            }
+            sqlBuilder.append(this.fieldSQL(fields.get(i)));
+            if (i != length - 1) {
+                sqlBuilder.append(",");
+            }
         }
         sqlBuilder
-            .replace(sqlBuilder.length() - 1, sqlBuilder.length(), "")
-            .append("ENGINE=").append(entity.getEngineType().name())
+            .append(") ")
+            .append("ENGINE=").append(entity.getEngineType().name()).append(" ")
             .append("DEFAULT CHARSET=").append(entity.getCharset().toString());
 
         return sqlBuilder.toString();
@@ -67,11 +77,12 @@ public class MySQLDataTable<T> implements IDataTable {
                 sqlBuilder.append(")");
             }
         }
+        sqlBuilder.append(" ");
         if (fieldEntity.isHasPrimaryKey()) {
             sqlBuilder.append("PRIMARY KEY ");
         }
-        if(fieldEntity.getAttribute().isAutoIncrement()) {
-            sqlBuilder.append("AUTO INCREMENT ");
+        if (fieldEntity.getAttribute().isAutoIncrement()) {
+            sqlBuilder.append("AUTO_INCREMENT ");
         }
         sqlBuilder.append(fieldEntity.isNotNull() ? "NOT NULL" : "NULL");
 
@@ -80,7 +91,6 @@ public class MySQLDataTable<T> implements IDataTable {
 
     @Override
     public int insert(Object entity) {
-
         return 0;
     }
 

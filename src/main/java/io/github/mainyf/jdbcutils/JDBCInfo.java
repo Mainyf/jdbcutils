@@ -3,6 +3,7 @@ package io.github.mainyf.jdbcutils;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Getter
@@ -47,7 +48,7 @@ public class JDBCInfo {
         private String database;
         private String username;
         private String password;
-        private Map<String, String> params;
+        private Map<String, String> params = new HashMap<>();
         private int maxPool = 10;
 
         private JDBCInfoBuilder() {

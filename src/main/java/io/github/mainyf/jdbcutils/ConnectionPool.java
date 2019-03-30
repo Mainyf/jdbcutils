@@ -2,6 +2,7 @@ package io.github.mainyf.jdbcutils;
 
 import com.google.common.reflect.Reflection;
 
+import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -21,7 +22,7 @@ public class ConnectionPool {
             throw new RuntimeException("jdbc info driver class path cannot null");
         }
         Class.forName(jdbcInfo.getDriver());
-        for(int i = 0;i < jdbcInfo.getMaxPool();i++) {
+        for (int i = 0; i < jdbcInfo.getMaxPool(); i++) {
             addConnection();
         }
     }
@@ -29,15 +30,17 @@ public class ConnectionPool {
     private void addConnection() {
         try {
             this.dataSources.add(
-                DriverManager.getConnection(
-                    "jdbc:mysql://" +
-                        jdbcInfo.getHost() +
-                        ":" +
-                        jdbcInfo.getDatabase() +
-                        jdbcInfo.toParamsString(),
-                    jdbcInfo.getUsername(),
-                    jdbcInfo.getPassword()
-                )
+                    DriverManager.getConnection(
+                            "jdbc:mysql://" +
+                                    jdbcInfo.getHost() +
+                                    ":" +
+                                    jdbcInfo.getPort() +
+                                    "/" +
+                                    jdbcInfo.getDatabase() +
+                                    jdbcInfo.toParamsString(),
+                            jdbcInfo.getUsername(),
+                            jdbcInfo.getPassword()
+                    )
             );
         } catch (SQLException e) {
             e.printStackTrace();
@@ -63,13 +66,17 @@ public class ConnectionPool {
     }
 
     private Connection attachProxyToConnection(Connection connection) {
-        return Reflection.newProxy(connection.getClass(), (proxy, method, args) -> {
-            if (method.getName().equals("close")) {
-                dataSources.addLast(connection);
-                return null;
+        return (Connection) Proxy.newProxyInstance(
+            connection.getClass().getClassLoader(),
+            new Class[]{Connection.class},
+            (proxy, method, args) -> {
+                if (method.getName().equals("close")) {
+                    dataSources.addLast(connection);
+                    return null;
+                }
+                return args == null ? method.invoke(connection) : method.invoke(connection, args);
             }
-            return args == null ? method.invoke(connection) : method.invoke(connection, args);
-        });
+        );
     }
 
 }
