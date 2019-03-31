@@ -1,21 +1,22 @@
 package io.github.mainyf.jdbcutils.sql.builder.create;
 
+import com.google.common.collect.Sets;
 import io.github.mainyf.jdbcutils.sql.builder.IBuilder;
 import io.github.mainyf.jdbcutils.sql.builder.commonentrys.CharsetsEntry;
 import io.github.mainyf.jdbcutils.sql.builder.commonentrys.DataEngineEntry;
-import io.github.mainyf.jdbcutils.sql.builder.create.entrys.MetadataEntry;
-import io.github.mainyf.jdbcutils.sql.builder.create.entrys.ColumnConstrainEntry;
+import io.github.mainyf.jdbcutils.sql.builder.create.entrys.ConstrainEntry;
 import io.github.mainyf.jdbcutils.sql.builder.create.entrys.DataTypeEntry;
+import io.github.mainyf.jdbcutils.sql.builder.create.entrys.MetadataEntry;
+import lombok.var;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class CreateBuilder implements IBuilder {
 
     private String tableName;
     private Map<String, DataTypeEntry> columns;
-    private List<ColumnConstrainEntry> constraintsSet;
+    private Set<ConstrainEntry> constraintsSet;
     private MetadataEntry metadata;
 
     public CreateBuilder(String tableName) {
@@ -30,8 +31,8 @@ public class CreateBuilder implements IBuilder {
         return this;
     }
 
-    public CreateBuilder constraints(ColumnConstrainEntry... constraintsSet) {
-        this.constraintsSet = Arrays.asList(constraintsSet);
+    public CreateBuilder constraints(ConstrainEntry... constraintsSet) {
+        this.constraintsSet = Sets.newHashSet(constraintsSet);
         return this;
     }
 
@@ -47,7 +48,9 @@ public class CreateBuilder implements IBuilder {
 
     @Override
     public String toSQL() {
-        // TODO use column builder generate sql string
+//        new ColumnBuilder()
+        var sqlBuilder = new StringBuilder();
+        sqlBuilder.append("CREATE TABLE IF NOT EXISTS");
         return "";
     }
 }

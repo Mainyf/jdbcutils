@@ -1,7 +1,7 @@
 package io.github.mainyf.jdbcutils.sql.builder.create;
 
 import io.github.mainyf.jdbcutils.sql.builder.IBuilder;
-import io.github.mainyf.jdbcutils.sql.builder.create.entrys.ColumnConstrainEntry;
+import io.github.mainyf.jdbcutils.sql.builder.create.entrys.ConstrainEntry;
 import io.github.mainyf.jdbcutils.sql.builder.create.entrys.DataTypeEntry;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +15,7 @@ public class ColumnBuilder implements IBuilder {
 
     private String name;
     private DataTypeEntry dataType;
-    private List<ColumnConstrainEntry> constrainEntries;
+    private List<ConstrainEntry> constrainEntries;
 
     @Override
     public String toSQL() {
