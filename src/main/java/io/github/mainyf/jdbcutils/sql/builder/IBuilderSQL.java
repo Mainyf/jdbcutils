@@ -1,6 +1,6 @@
 package io.github.mainyf.jdbcutils.sql.builder;
 
-public interface IBuilder {
+public interface IBuilderSQL {
 
     String toSQL();
 
