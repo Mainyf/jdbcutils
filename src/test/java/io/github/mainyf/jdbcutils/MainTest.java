@@ -40,10 +40,11 @@ public class MainTest {
                     SQLBuilder.constrain().autoIncrement("uid"),
                     SQLBuilder.constrain().unique("uid", "uuid")
                 )
-                .metadatas(
-                    SQLBuilder.metadata().charset("asdasd"),
-                    SQLBuilder.metadata().dataEngine("asdasd")
-                )
+                // TODO metadata
+//                .metadatas(
+//                    SQLBuilder.metadata().charset("asdasd"),
+//                    SQLBuilder.metadata().dataEngine("asdasd")
+//                )
                 .toSQL()
         );
 
