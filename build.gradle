@@ -1,26 +1,35 @@
-plugins {
-    id 'java'
-}
+allprojects {
+    apply plugin: 'java'
+    group = "io.github.mainyf"
+    version = "1.0"
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    [compileJava, compileTestJava, javadoc]*.options*.encoding = "UTF-8"
 
-group 'io.github.mainyf'
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-    maven {
-        name = 'snapshots-repo'
-        url = uri('https://oss.sonatype.org/content/repositories/snapshots')
+    repositories {
+        mavenCentral()
+        maven {
+            name = "snapshots-repo"
+            url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+        }
+    }
+    dependencies {
+        compile 'com.google.guava:guava:27.1-jre'
+        compile("mysql:mysql-connector-java:8.0.15")
+        compileOnly("org.projectlombok:lombok:1.18.6")
+        annotationProcessor("org.projectlombok:lombok:1.18.6")
+        testCompile("junit:junit:4.12")
     }
 }
 
-dependencies {
-//    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
-    compile group: 'com.google.guava', name: 'guava', version: '27.1-jre'
-    compile 'mysql:mysql-connector-java:8.0.15'
-//    compile 'io.vavr:vavr:0.9.3'
-    compileOnly 'org.projectlombok:lombok:1.18.6'
-    annotationProcessor 'org.projectlombok:lombok:1.18.6'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+subprojects {
+
+}
+
+task allJar(type: org.gradle.jvm.tasks.Jar, dependsOn: classes) {
+    classifier = 'all'
+    subprojects.each { subproject ->
+        from subproject.sourceSets.main.output
+//        configurations = [subproject.configurations.compile]
+    }
 }
